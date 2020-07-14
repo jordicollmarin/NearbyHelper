@@ -11,6 +11,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Replace them Splash -> NoActionBar
+        setTheme(R.style.AppTheme_NoActionBar)
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -24,9 +27,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_filter -> true
-            R.id.action_order_by -> true
+            R.id.action_filter -> onFilterClicked()
+            R.id.action_order_by -> onOrderByClicked()
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun onFilterClicked(): Boolean {
+        // TODO: Open filter for (Cafes, Restaurant, Bars)
+        return true
+    }
+
+    private fun onOrderByClicked(): Boolean {
+        // TODO: Open Order by (Name, Open/Closed, etc.)
+        return true
     }
 }

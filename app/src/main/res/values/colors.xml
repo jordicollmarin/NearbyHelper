@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">@color/science_blue</color>
+    <color name="colorPrimaryDark">@color/congress_blue</color>
+    <color name="colorAccent">@color/malibu</color>
+
+    <!-- General colors -->
+    <color name="science_blue">#006ADC</color>
+    <color name="congress_blue">#003E80</color>
+    <color name="malibu">#77B8FD</color>
 </resources>

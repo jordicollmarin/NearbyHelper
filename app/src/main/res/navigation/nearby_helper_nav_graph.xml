@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nearby_helper_nav_graph"
+    app:startDestination="@id/NearbyPlacesListFragment">
+
+    <fragment
+        android:id="@+id/NearbyPlacesListFragment"
+        android:name="cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesListFragment"
+        android:label="@string/nearby_places_list_fragment_label"
+        tools:layout="@layout/fragment_nearby_places_list">
+
+        <action
+            android:id="@+id/action_NearbyPlacesListFragment_to_NearbyPlaceDetailFragment"
+            app:destination="@id/NearbyPlaceDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/NearbyPlaceDetailFragment"
+        android:name="cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlaceDetailFragment"
+        android:label="@string/nearby_place_detail_fragment_label"
+        tools:layout="@layout/fragment_nearby_place_detail" />
+</navigation>

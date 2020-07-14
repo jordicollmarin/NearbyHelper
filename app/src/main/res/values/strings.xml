@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">NearbyHelper</string>
-    <string name="action_settings">Settings</string>
 
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <!-- Nearby places list -->
+    <string name="nearby_places_list_fragment_label">Nearby places</string>
+    <string name="nearby_places_list_filter">Filter</string>
+    <string name="nearby_places_list_order_by">Order by</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Nearby place detail -->
+    <string name="nearby_place_detail_fragment_label">Nearby place detail</string>
 </resources>

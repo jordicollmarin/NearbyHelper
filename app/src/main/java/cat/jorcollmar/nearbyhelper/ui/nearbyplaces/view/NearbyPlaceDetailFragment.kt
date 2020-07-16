@@ -2,13 +2,16 @@ package cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import cat.jorcollmar.nearbyhelper.common.extension.observe
 import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlaceDetailBinding
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
@@ -20,6 +23,16 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var viewModelFactory: NearbyPlacesViewModelFactory
+
+    private val viewModel: NearbyPlacesViewModel by lazy {
+        ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        ).get(NearbyPlacesViewModel::class.java)
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -37,6 +50,19 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
     ): View? {
         binding = FragmentNearbyPlaceDetailBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.observe(viewModel.selectedPlace, {
+            it?.let {
+                Log.i("TEEEEEEST", it.name)
+                // TODO: Fill detail data (images)
+            } ?: run {
+                // TODO: Show error to user and go back to list fragment
+            }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

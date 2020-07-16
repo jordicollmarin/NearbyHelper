@@ -33,7 +33,10 @@ class NearbyPlacesListFragment : DaggerFragment() {
     lateinit var viewModelFactory: NearbyPlacesViewModelFactory
 
     private val viewModel: NearbyPlacesViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(NearbyPlacesViewModel::class.java)
+        ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        ).get(NearbyPlacesViewModel::class.java)
     }
 
     private val placesAdapter: NearbyPlaceListAdapter by lazy {
@@ -58,6 +61,12 @@ class NearbyPlacesListFragment : DaggerFragment() {
 
         binding.rcvNearbyPlaces.layoutManager = LinearLayoutManager(context)
         binding.rcvNearbyPlaces.adapter = placesAdapter
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.observe(viewModel.loading, {
             it?.let {
@@ -84,8 +93,6 @@ class NearbyPlacesListFragment : DaggerFragment() {
                 // TODO: Show error to user to retry WS call
             }
         })
-
-        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -23,14 +23,16 @@ class NearbyPlacesViewModel @Inject constructor(
     val places: LiveData<List<Place>>
         get() = _places
 
-    private lateinit var _selectedPlace: Place
+    private val _selectedPlace = MutableLiveData<Place>()
+    val selectedPlace: LiveData<Place>
+        get() = _selectedPlace
 
     init {
         getNearbyPlacesList()
     }
 
     fun setSelectedPlace(place: Place) {
-        _selectedPlace = place
+        _selectedPlace.value = place
     }
 
     fun getNearbyPlacesList() {

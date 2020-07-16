@@ -4,16 +4,23 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cat.jorcollmar.domain.usecase.nearbyplaces.GetAllNearbyPlaces
+import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaces
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.mapper.PlaceMapper
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 import io.reactivex.functions.Consumer
 import javax.inject.Inject
 
 class NearbyPlacesViewModel @Inject constructor(
-    private val getAllNearbyPlaces: GetAllNearbyPlaces,
+    private val getNearbyPlaces: GetNearbyPlaces,
     private val placeMapper: PlaceMapper
 ) : ViewModel() {
+
+    lateinit var selectedPlace: Place
+    var selectedPlaceType: String? = null
+        set(value) {
+            getNearbyPlacesList()
+            field = value
+        }
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
@@ -23,22 +30,14 @@ class NearbyPlacesViewModel @Inject constructor(
     val places: LiveData<List<Place>>
         get() = _places
 
-    private val _selectedPlace = MutableLiveData<Place>()
-    val selectedPlace: LiveData<Place>
-        get() = _selectedPlace
-
     init {
         getNearbyPlacesList()
     }
 
-    fun setSelectedPlace(place: Place) {
-        _selectedPlace.value = place
-    }
-
-    fun getNearbyPlacesList() {
+    private fun getNearbyPlacesList() {
         _loading.value = true
 
-        getAllNearbyPlaces.execute(
+        getNearbyPlaces.execute(
             Consumer {
                 _loading.value = false
                 _places.value = placeMapper.map(it)
@@ -49,12 +48,12 @@ class NearbyPlacesViewModel @Inject constructor(
                 _places.value = null
             },
             // TODO: Get latitude and longitude from viewModelVariable currentPosition
-            GetAllNearbyPlaces.Params("-33.8670522", "151.1957362")
+            GetNearbyPlaces.Params("-33.8670522", "151.1957362", selectedPlaceType)
         )
     }
 
     override fun onCleared() {
-        getAllNearbyPlaces.dispose()
+        getNearbyPlaces.dispose()
         super.onCleared()
     }
 

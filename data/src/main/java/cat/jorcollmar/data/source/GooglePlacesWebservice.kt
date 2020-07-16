@@ -8,7 +8,7 @@ import retrofit2.http.QueryMap
 
 interface GooglePlacesWebservice {
     @GET(NEARBY_PLACE_SEARCH_ENDPOINT)
-    fun getAllNearbyPlaces(@QueryMap params: Map<String, String>): Single<GoogleApiResultDto>
+    fun getNearbyPlaces(@QueryMap params: Map<String, String>): Single<GoogleApiResultDto>
 
     @GET(NEARBY_PLACE_SEARCH_ENDPOINT)
     fun getMoreResults(

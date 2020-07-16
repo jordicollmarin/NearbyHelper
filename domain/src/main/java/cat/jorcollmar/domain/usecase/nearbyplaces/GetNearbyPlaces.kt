@@ -7,16 +7,16 @@ import com.mocadc.mocadc.domain.common.SchedulersFacade
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class GetAllNearbyPlaces @Inject constructor(
+class GetNearbyPlaces @Inject constructor(
     schedulers: SchedulersFacade,
     private val nearbyPlacesRepository: NearbyPlacesRepositoryContract
-) : BaseUseCase.RxObservableUseCase<List<PlaceDomain>, GetAllNearbyPlaces.Params>(
+) : BaseUseCase.RxObservableUseCase<List<PlaceDomain>, GetNearbyPlaces.Params>(
     schedulers
 ) {
 
     override fun build(params: Params): Observable<List<PlaceDomain>> {
-        return nearbyPlacesRepository.getAllNearbyPlaces(params.lat, params.lng)
+        return nearbyPlacesRepository.getNearbyPlaces(params.lat, params.lng, params.placeType)
     }
 
-    class Params(val lat: String, val lng: String)
+    class Params(val lat: String, val lng: String, val placeType: String?)
 }

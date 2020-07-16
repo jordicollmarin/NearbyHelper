@@ -17,7 +17,7 @@ import cat.jorcollmar.nearbyhelper.R
 import cat.jorcollmar.nearbyhelper.common.extension.observe
 import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlacesListBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
-import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlaceListAdapter
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesAdapter
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
@@ -39,8 +39,8 @@ class NearbyPlacesListFragment : DaggerFragment() {
         ).get(NearbyPlacesViewModel::class.java)
     }
 
-    private val placesAdapter: NearbyPlaceListAdapter by lazy {
-        NearbyPlaceListAdapter(::openPlaceDetail)
+    private val placesAdapter: NearbyPlacesAdapter by lazy {
+        NearbyPlacesAdapter(::openPlaceDetail)
     }
 
     override fun onAttach(context: Context) {
@@ -51,24 +51,8 @@ class NearbyPlacesListFragment : DaggerFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentNearbyPlacesListBinding.inflate(inflater, container, false)
-
-        binding.rcvNearbyPlaces.layoutManager = LinearLayoutManager(context)
-        binding.rcvNearbyPlaces.adapter = placesAdapter
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewLifecycleOwner.observe(viewModel.loading, {
+        observe(viewModel.loading, {
             it?.let {
                 binding.prbNearbyPlaces.visibility = if (it) {
                     View.VISIBLE
@@ -85,7 +69,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
             }
         })
 
-        viewLifecycleOwner.observe(viewModel.places, {
+        observe(viewModel.places, {
             binding.prbNearbyPlaces.visibility = View.GONE
             it?.let {
                 placesAdapter.updateItems(it)
@@ -93,6 +77,20 @@ class NearbyPlacesListFragment : DaggerFragment() {
                 // TODO: Show error to user to retry WS call
             }
         })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentNearbyPlacesListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.rcvNearbyPlaces.layoutManager = LinearLayoutManager(context)
+        binding.rcvNearbyPlaces.adapter = placesAdapter
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -107,7 +105,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_filter_all -> onFilterClicked(item, FILTER_ALL)
+            R.id.action_filter_all -> onFilterClicked(item, null)
             R.id.action_filter_bars -> onFilterClicked(item, FILTER_BARS)
             R.id.action_filter_cafes -> onFilterClicked(item, FILTER_CAFES)
             R.id.action_filter_restaurants -> onFilterClicked(item, FILTER_RESTAURANTS)
@@ -116,19 +114,9 @@ class NearbyPlacesListFragment : DaggerFragment() {
         }
     }
 
-    private fun onFilterClicked(item: MenuItem, filterType: Int): Boolean {
+    private fun onFilterClicked(item: MenuItem, filterType: String?): Boolean {
         item.isChecked = item.isChecked.not()
-
-        when (filterType) {
-            FILTER_ALL -> viewModel.getNearbyPlacesList()
-            FILTER_BARS -> {
-            }
-            FILTER_CAFES -> {
-            }
-            FILTER_RESTAURANTS -> {
-            }
-        }
-
+        viewModel.selectedPlaceType = filterType
         return false
     }
 
@@ -138,14 +126,13 @@ class NearbyPlacesListFragment : DaggerFragment() {
     }
 
     private fun openPlaceDetail(place: Place) {
-        viewModel.setSelectedPlace(place)
+        viewModel.selectedPlace = place
         findNavController().navigate(NearbyPlacesListFragmentDirections.actionNearbyPlacesListFragmentToNearbyPlaceDetailFragment())
     }
 
     companion object {
-        const val FILTER_ALL = 0
-        const val FILTER_BARS = 1
-        const val FILTER_CAFES = 2
-        const val FILTER_RESTAURANTS = 3
+        const val FILTER_BARS = "bar"
+        const val FILTER_CAFES = "cafe"
+        const val FILTER_RESTAURANTS = "restaurant"
     }
 }

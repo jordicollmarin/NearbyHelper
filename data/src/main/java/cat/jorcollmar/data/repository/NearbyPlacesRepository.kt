@@ -13,18 +13,10 @@ class NearbyPlacesRepository @Inject constructor(
 ) :
     NearbyPlacesRepositoryContract {
 
-    override fun getAllNearbyPlaces(lat: String, lng: String): Observable<List<PlaceDomain>> =
-        nearbyPlacesApiDataSource.getAllNearbyPlaces(lat, lng).map { placeDataMapper.map(it) }
-
-    override fun getNearbyBars(): Observable<List<PlaceDomain>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getNearbyCafes(): Observable<List<PlaceDomain>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getNearbyRestaurants(): Observable<List<PlaceDomain>> {
-        TODO("Not yet implemented")
-    }
+    override fun getNearbyPlaces(
+        lat: String,
+        lng: String,
+        placeType: String?
+    ): Observable<List<PlaceDomain>> =
+        nearbyPlacesApiDataSource.getNearbyPlaces(lat, lng, placeType).map { placeDataMapper.map(it) }
 }

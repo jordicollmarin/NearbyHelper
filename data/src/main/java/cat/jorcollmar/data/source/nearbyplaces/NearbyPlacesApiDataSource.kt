@@ -15,13 +15,15 @@ class NearbyPlacesApiDataSource @Inject constructor(
 
     private var currentPageToken: String = ""
 
-    fun getAllNearbyPlaces(lat: String, lng: String): Observable<List<PlaceData>> =
-        googlePlacesWebservice.getAllNearbyPlaces(
-            mapOf(
+    fun getNearbyPlaces(lat: String, lng: String, placeType: String?): Observable<List<PlaceData>> =
+        googlePlacesWebservice.getNearbyPlaces(
+            mutableMapOf(
                 "location" to "$lat,$lng",
                 "radius" to DEFAULT_RADIUS_VALUE,
                 "key" to BuildConfig.GOOGLE_PLACES_API_KEY
-            )
+            ).apply {
+                placeType?.let { this["type"] = it }
+            }
         ).flatMapObservable {
             currentPageToken = it.next_page_token ?: ""
             it.results?.let { results ->

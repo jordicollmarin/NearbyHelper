@@ -10,9 +10,9 @@ import cat.jorcollmar.nearbyhelper.common.extension.loadImage
 import cat.jorcollmar.nearbyhelper.databinding.NearbyPlaceItemBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 
-class NearbyPlaceListAdapter(
+class NearbyPlacesAdapter(
     private val onPlaceClick: (Place) -> Unit
-) : RecyclerView.Adapter<NearbyPlaceListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<NearbyPlacesAdapter.ViewHolder>() {
 
     private var placesList: MutableList<Place> = mutableListOf()
 

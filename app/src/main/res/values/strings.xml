@@ -1,10 +1,20 @@
 <resources>
-    <string name="app_name">NearbyHelper</string>
+    <string name="app_name">Nearby Helper</string>
+
+    <!-- Errors -->
+    <string name="error_nearby_places_list">Could not get nearby places</string>
 
     <!-- Nearby places list -->
     <string name="nearby_places_list_fragment_label">Nearby places</string>
-    <string name="nearby_places_list_filter">Filter</string>
     <string name="nearby_places_list_order_by">Order by</string>
+    <string name="nearby_places_list_filter_all">All</string>
+    <string name="nearby_places_list_filter_bars">Bars</string>
+    <string name="nearby_places_list_filter_cafes">Cafes</string>
+    <string name="nearby_places_list_filter_restaurants">Restaurants</string>
+    <string name="nearby_places_list_item_icon">Place icon (Bar, Cafe or Restaurant)</string>
+    <string name="nearby_places_list_item_rating">Rating: %1$s</string>
+    <string name="nearby_places_list_item_open">Open</string>
+    <string name="nearby_places_list_item_closed">Closed</string>
 
     <!-- Nearby place detail -->
     <string name="nearby_place_detail_fragment_label">Nearby place detail</string>

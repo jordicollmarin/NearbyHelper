@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cat.jorcollmar.nearbyhelper">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".ui.application.NearbyHelperApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Splash">
         <activity
-            android:name=".ui.main.view.MainActivity"
+            android:name=".ui.nearbyhelper.view.NearbyHelperActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

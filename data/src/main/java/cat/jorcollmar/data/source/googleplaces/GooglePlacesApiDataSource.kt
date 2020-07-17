@@ -41,6 +41,6 @@ class GooglePlacesApiDataSource @Inject constructor(
             }
 
     companion object {
-        const val DEFAULT_RADIUS_VALUE = "5000"
+        const val DEFAULT_RADIUS_VALUE = "1000"
     }
 }

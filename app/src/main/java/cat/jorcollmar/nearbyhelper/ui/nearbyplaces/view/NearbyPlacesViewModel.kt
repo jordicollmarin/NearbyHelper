@@ -40,6 +40,10 @@ class NearbyPlacesViewModel @Inject constructor(
     val places: LiveData<List<Place>>
         get() = _places
 
+    private val _error = MutableLiveData<Int>()
+    val error: LiveData<Int>
+        get() = _error
+
     fun onRequestPermissionResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == PermissionManager.LOCATION_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty()) {
             when (grantResults.first()) {
@@ -54,10 +58,10 @@ class NearbyPlacesViewModel @Inject constructor(
     }
 
     private fun onLocationPermissionDenied() {
-        // TODO: Show error to user
+        _error.value = ERROR_PERMISSION_DENIED
     }
 
-    private fun getCurrentLocation() {
+    fun getCurrentLocation() {
         _loading.value = true
 
         getCurrentLocation.execute(
@@ -67,15 +71,15 @@ class NearbyPlacesViewModel @Inject constructor(
                 getNearbyPlacesList()
             },
             Consumer {
-                _loading.value = false
                 Log.e(TAG, it.localizedMessage ?: it.message ?: "Could not get Location")
-                // TODO: Show error to user
+                _loading.value = false
+                _error.value = ERROR_LOCATION
             },
             GetCurrentLocation.Params()
         )
     }
 
-    private fun getNearbyPlacesList() {
+    fun getNearbyPlacesList() {
         _loading.value = true
 
         getNearbyPlaces.execute(
@@ -86,7 +90,7 @@ class NearbyPlacesViewModel @Inject constructor(
             Consumer {
                 Log.e(TAG, it.localizedMessage ?: it.message ?: "Could not get nearby places")
                 _loading.value = false
-                _places.value = null
+                _error.value = ERROR_NEARBY_PLACES
             },
             GetNearbyPlaces.Params(
                 currentLocation.lat.toString(),
@@ -119,11 +123,16 @@ class NearbyPlacesViewModel @Inject constructor(
 
     override fun onCleared() {
         getNearbyPlaces.dispose()
+        getCurrentLocation.dispose()
         super.onCleared()
     }
 
     companion object {
         private const val TAG = "NearbyPlacesViewModel"
+
+        const val ERROR_PERMISSION_DENIED = 1000
+        const val ERROR_LOCATION = 1001
+        const val ERROR_NEARBY_PLACES = 1002
 
         const val SORT_RATING = 0
         const val SORT_NAME = 1

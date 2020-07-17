@@ -8,18 +8,21 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cat.jorcollmar.nearbyhelper.R
+import cat.jorcollmar.nearbyhelper.commons.extensions.observe
+import cat.jorcollmar.nearbyhelper.commons.factories.AlertDialogFactory
+import cat.jorcollmar.nearbyhelper.commons.managers.PermissionManager
 import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlacesListBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_LOCATION
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_NEARBY_PLACES
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_PERMISSION_DENIED
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesAdapter
-import cat.jorcollmar.nearbyhelper.commons.extensions.observe
-import cat.jorcollmar.nearbyhelper.commons.managers.PermissionManager
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
@@ -148,10 +151,54 @@ class NearbyPlacesListFragment : DaggerFragment() {
             binding.prbNearbyPlaces.visibility = View.GONE
             it?.let {
                 placesAdapter.updateItems(it, viewModel.currentLocation)
-            } ?: run {
-                // TODO: Show error to user to retry WS call
             }
         })
+
+        observe(viewModel.error, {
+            it?.let {
+                when (it) {
+                    ERROR_PERMISSION_DENIED -> showPermissionDeniedDialog()
+                    ERROR_LOCATION -> showLocationErrorDialog()
+                    ERROR_NEARBY_PLACES -> showNearbyPlacesListErrorDialog()
+                }
+            }
+        })
+    }
+
+    private fun showNearbyPlacesListErrorDialog() {
+        AlertDialogFactory.createAlertDialog(
+            requireContext(),
+            false,
+            getString(R.string.error_nearby_places_error_message),
+            getString(R.string.button_retry)
+        ) { dialog ->
+            dialog.dismiss()
+            viewModel.getNearbyPlacesList()
+        }.show()
+    }
+
+    private fun showLocationErrorDialog() {
+        AlertDialogFactory.createAlertDialog(
+            requireContext(),
+            false,
+            getString(R.string.error_location_unknown_message),
+            getString(R.string.button_retry)
+        ) { dialog ->
+            dialog.dismiss()
+            viewModel.getCurrentLocation()
+        }.show()
+    }
+
+    private fun showPermissionDeniedDialog() {
+        AlertDialogFactory.createAlertDialog(
+            requireContext(),
+            false,
+            getString(R.string.error_location_permission_denied_message),
+            getString(R.string.button_ok)
+        ) { dialog ->
+            dialog.dismiss()
+            activity?.finish()
+        }.show()
     }
 
     private fun onFilterClicked(item: MenuItem, filterType: String?): Boolean {
@@ -161,17 +208,17 @@ class NearbyPlacesListFragment : DaggerFragment() {
     }
 
     private fun onOrderByClicked(): Boolean {
-        AlertDialog.Builder(requireContext(), R.style.Theme_MaterialComponents_Light_Dialog)
-            .setTitle(getString(R.string.nearby_places_list_order_by))
-            .setSingleChoiceItems(
-                resources.getStringArray(R.array.nearby_places_list_order_options),
-                viewModel.selectedSortingOption
-            ) { dialog, which ->
-                dialog.dismiss()
-                viewModel.selectedSortingOption = which
-                viewModel.sortList()
-            }
-            .create().show()
+        AlertDialogFactory.createSingleChoiceAlertDialog(
+            requireContext(),
+            getString(R.string.nearby_places_list_order_by),
+            resources.getStringArray(R.array.nearby_places_list_order_options),
+            viewModel.selectedSortingOption
+        ) { dialog, which ->
+            dialog.dismiss()
+            viewModel.selectedSortingOption = which
+            viewModel.sortList()
+        }.show()
+
         return false
     }
 

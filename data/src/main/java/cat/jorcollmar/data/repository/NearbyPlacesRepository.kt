@@ -5,6 +5,7 @@ import cat.jorcollmar.data.source.googleplaces.GooglePlacesApiDataSource
 import cat.jorcollmar.domain.model.PlaceDomain
 import cat.jorcollmar.domain.repository.NearbyPlacesRepositoryContract
 import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 
 class NearbyPlacesRepository @Inject constructor(
@@ -20,4 +21,8 @@ class NearbyPlacesRepository @Inject constructor(
     ): Observable<List<PlaceDomain>> =
         googlePlacesApiDataSource.getNearbyPlaces(lat, lng, placeType)
             .map { placeDataMapper.map(it) }
+
+    override fun getNearbyDetail(placeId: String): Single<PlaceDomain> =
+        googlePlacesApiDataSource.getNearbyPlaceDetail(placeId).map { placeDataMapper.map(it) }
+
 }

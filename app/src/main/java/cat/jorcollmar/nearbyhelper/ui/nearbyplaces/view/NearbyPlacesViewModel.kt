@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cat.jorcollmar.domain.usecase.location.GetCurrentLocation
+import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaceDetail
 import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaces
 import cat.jorcollmar.nearbyhelper.commons.managers.PermissionManager
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.mapper.LocationMapper
@@ -20,17 +21,23 @@ class NearbyPlacesViewModel @Inject constructor(
     private val getCurrentLocation: GetCurrentLocation,
     private val locationMapper: LocationMapper,
     private val getNearbyPlaces: GetNearbyPlaces,
+    private val getNearbyPlaceDetail: GetNearbyPlaceDetail,
     private val placeMapper: PlaceMapper
 ) : ViewModel() {
 
     lateinit var currentLocation: Location
-    lateinit var selectedPlace: Place
+    lateinit var selectedPlaceId: String
+
     var selectedSortingOption: Int = SORT_RATING
     var selectedPlaceType: String? = null
         set(value) {
             field = value
             getNearbyPlacesList()
         }
+
+    private val _selectedPlace = MutableLiveData<Place>()
+    val selectedPlace: LiveData<Place>
+        get() = _selectedPlace
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
@@ -100,6 +107,23 @@ class NearbyPlacesViewModel @Inject constructor(
         )
     }
 
+    fun getNearbyPlaceDetail() {
+        _loading.value = true
+
+        getNearbyPlaceDetail.execute(
+            Consumer {
+                _loading.value = false
+                _selectedPlace.value = placeMapper.map(it)
+            },
+            Consumer {
+                Log.e(TAG, it.localizedMessage ?: it.message ?: "Could not get nearby place detail")
+                _loading.value = false
+                _error.value = ERROR_NEARBY_PLACE_DETAIL
+            },
+            GetNearbyPlaceDetail.Params(selectedPlaceId)
+        )
+    }
+
     private fun applySorting(places: List<Place>?): List<Place> {
         places?.let { placesList ->
             return when (selectedSortingOption) {
@@ -124,6 +148,7 @@ class NearbyPlacesViewModel @Inject constructor(
     override fun onCleared() {
         getNearbyPlaces.dispose()
         getCurrentLocation.dispose()
+        getNearbyPlaceDetail.dispose()
         super.onCleared()
     }
 
@@ -133,6 +158,7 @@ class NearbyPlacesViewModel @Inject constructor(
         const val ERROR_PERMISSION_DENIED = 1000
         const val ERROR_LOCATION = 1001
         const val ERROR_NEARBY_PLACES = 1002
+        const val ERROR_NEARBY_PLACE_DETAIL = 1003
 
         const val SORT_RATING = 0
         const val SORT_NAME = 1

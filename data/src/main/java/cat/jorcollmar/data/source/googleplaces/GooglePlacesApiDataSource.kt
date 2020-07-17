@@ -31,6 +31,15 @@ class GooglePlacesApiDataSource @Inject constructor(
             }
         }
 
+    fun getNearbyPlaceDetail(placeId: String): Single<PlaceData> =
+        googlePlacesWebservice.getNearbyPlaceDetail(
+            BuildConfig.GOOGLE_PLACES_API_KEY,
+            placeId,
+            NEARBY_DETAIL_FIELDS
+        ).map {
+            it.result?.let { placeDto -> placeDtoMapper.map(placeDto) }
+        }
+
     fun getNextResults(): Observable<List<PlaceData>> =
         googlePlacesWebservice.getMoreResults(currentPageToken, BuildConfig.GOOGLE_PLACES_API_KEY)
             .flatMapObservable { googleApiResultsDto ->
@@ -42,5 +51,7 @@ class GooglePlacesApiDataSource @Inject constructor(
 
     companion object {
         const val DEFAULT_RADIUS_VALUE = "1000"
+        const val NEARBY_DETAIL_FIELDS =
+            "place_id,icon,name,price_level,international_phone_number,rating,user_ratings_total,opening_hours,geometry,photos"
     }
 }

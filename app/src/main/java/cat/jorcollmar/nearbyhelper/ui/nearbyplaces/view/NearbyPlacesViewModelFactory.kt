@@ -3,6 +3,7 @@ package cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cat.jorcollmar.domain.usecase.location.GetCurrentLocation
+import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaceDetail
 import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaces
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.mapper.LocationMapper
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.mapper.PlaceMapper
@@ -12,6 +13,7 @@ class NearbyPlacesViewModelFactory @Inject constructor(
     private val getCurrentLocation: GetCurrentLocation,
     private val locationMapper: LocationMapper,
     private val getNearbyPlaces: GetNearbyPlaces,
+    private val getNearbyPlaceDetail: GetNearbyPlaceDetail,
     private val placeMapper: PlaceMapper
 ) : ViewModelProvider.Factory {
 
@@ -22,6 +24,7 @@ class NearbyPlacesViewModelFactory @Inject constructor(
                 getCurrentLocation,
                 locationMapper,
                 getNearbyPlaces,
+                getNearbyPlaceDetail,
                 placeMapper
             ) as T
         }

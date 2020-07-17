@@ -15,6 +15,8 @@ class PlaceDtoMapper @Inject constructor(
             unmapped.place_id,
             unmapped.icon,
             unmapped.name,
+            unmapped.price_level,
+            unmapped.international_phone_number,
             unmapped.rating,
             unmapped.user_ratings_total,
             unmapped.opening_hours?.open_now,

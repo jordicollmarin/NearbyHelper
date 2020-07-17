@@ -16,7 +16,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField("String", "GOOGLE_PLACES_API_KEY", "\"AIzaSyBMjokztwVU7q38c99Lx47fEp0EnLx80fE\"")
+        buildConfigField("String", "GOOGLE_PLACES_API_KEY", GOOGLE_PLACES_API_KEY)
     }
 
     buildTypes {

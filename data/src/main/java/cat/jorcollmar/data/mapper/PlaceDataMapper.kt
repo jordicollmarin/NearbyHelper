@@ -15,6 +15,8 @@ class PlaceDataMapper @Inject constructor(
             unmapped.id,
             unmapped.icon,
             unmapped.name,
+            unmapped.priceLevel,
+            unmapped.internationalPhoneNumber,
             unmapped.rating,
             unmapped.userRatingsTotal,
             unmapped.openNow,

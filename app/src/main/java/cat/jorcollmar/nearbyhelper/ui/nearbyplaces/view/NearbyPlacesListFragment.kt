@@ -223,7 +223,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
     }
 
     private fun openPlaceDetail(place: Place) {
-        viewModel.selectedPlace = place
+        viewModel.selectedPlaceId = place.id
         findNavController().navigate(NearbyPlacesListFragmentDirections.actionNearbyPlacesListFragmentToNearbyPlaceDetailFragment())
     }
 

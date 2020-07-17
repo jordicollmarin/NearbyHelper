@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import cat.jorcollmar.nearbyhelper.commons.extensions.loadImageFit
+import cat.jorcollmar.nearbyhelper.commons.extensions.loadImageCenterCrop
 
 class NearbyPlacesImagesAdapter : PagerAdapter() {
     private var imagesList: MutableList<String> = mutableListOf()
@@ -24,7 +24,7 @@ class NearbyPlacesImagesAdapter : PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(container.context)
-        imageView.loadImageFit(Uri.parse(imagesList[position]))
+        imageView.loadImageCenterCrop(Uri.parse(imagesList[position]))
         (container as ViewPager).addView(imageView, 0)
         return imageView
     }

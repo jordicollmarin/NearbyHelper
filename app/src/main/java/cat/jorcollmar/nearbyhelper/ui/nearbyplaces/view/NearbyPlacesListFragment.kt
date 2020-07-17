@@ -21,6 +21,7 @@ import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlacesListBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_LOCATION
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_NEARBY_PLACES
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_NEARBY_PLACES_DISTANCE
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_PERMISSION_DENIED
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesAdapter
 import dagger.android.DispatchingAndroidInjector
@@ -161,6 +162,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
                     ERROR_PERMISSION_DENIED -> showPermissionDeniedDialog()
                     ERROR_LOCATION -> showLocationErrorDialog()
                     ERROR_NEARBY_PLACES -> showNearbyPlacesListErrorDialog()
+                    ERROR_NEARBY_PLACES_DISTANCE -> showNearbyPlacesListErrorDialog()
                 }
             }
         })

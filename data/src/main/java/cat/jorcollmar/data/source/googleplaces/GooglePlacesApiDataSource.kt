@@ -31,6 +31,25 @@ class GooglePlacesApiDataSource @Inject constructor(
             }
         }
 
+    fun getNearbyPlacesOrderedByDistance(
+        lat: String,
+        lng: String,
+        placeType: String
+    ): Observable<List<PlaceData>> =
+        googlePlacesWebservice.getNearbyPlaces(
+            mutableMapOf(
+                "location" to "$lat,$lng",
+                "key" to BuildConfig.GOOGLE_PLACES_API_KEY,
+                "type" to placeType,
+                "rankby" to RANK_BY_DISTANCE_VALUE
+            )
+        ).flatMapObservable {
+            currentPageToken = it.next_page_token ?: ""
+            it.results?.let { results ->
+                Single.just(placeDtoMapper.map(results)).toObservable()
+            }
+        }
+
     fun getNearbyPlaceDetail(placeId: String): Single<PlaceData> =
         googlePlacesWebservice.getNearbyPlaceDetail(
             BuildConfig.GOOGLE_PLACES_API_KEY,
@@ -51,6 +70,7 @@ class GooglePlacesApiDataSource @Inject constructor(
 
     companion object {
         const val DEFAULT_RADIUS_VALUE = "1000"
+        const val RANK_BY_DISTANCE_VALUE = "distance"
         const val NEARBY_DETAIL_FIELDS =
             "place_id,icon,name,price_level,international_phone_number,rating,user_ratings_total,opening_hours,geometry,photos"
     }

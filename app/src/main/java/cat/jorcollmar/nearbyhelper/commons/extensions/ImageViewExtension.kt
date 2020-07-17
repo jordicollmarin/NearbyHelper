@@ -21,7 +21,7 @@ fun ImageView.loadImage(uri: Uri?) {
         })
 }
 
-fun ImageView.loadImageFit(uri: Uri?) {
+fun ImageView.loadImageCenterCrop(uri: Uri?) {
     Picasso
         .get()
         .load(uri)

@@ -22,6 +22,14 @@ class NearbyPlacesRepository @Inject constructor(
         googlePlacesApiDataSource.getNearbyPlaces(lat, lng, placeType)
             .map { placeDataMapper.map(it) }
 
+    override fun getNearbyPlacesOrderedByDistance(
+        lat: String,
+        lng: String,
+        placeType: String
+    ): Observable<List<PlaceDomain>> =
+        googlePlacesApiDataSource.getNearbyPlacesOrderedByDistance(lat, lng, placeType)
+            .map { placeDataMapper.map(it) }
+
     override fun getNearbyDetail(placeId: String): Single<PlaceDomain> =
         googlePlacesApiDataSource.getNearbyPlaceDetail(placeId).map { placeDataMapper.map(it) }
 

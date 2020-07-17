@@ -9,11 +9,13 @@ import androidx.lifecycle.ViewModel
 import cat.jorcollmar.domain.usecase.location.GetCurrentLocation
 import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaceDetail
 import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlaces
+import cat.jorcollmar.domain.usecase.nearbyplaces.GetNearbyPlacesOrderedByDistance
 import cat.jorcollmar.nearbyhelper.commons.managers.PermissionManager
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.mapper.LocationMapper
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.mapper.PlaceMapper
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Location
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesListFragment.Companion.FILTER_RESTAURANTS
 import io.reactivex.functions.Consumer
 import javax.inject.Inject
 
@@ -22,6 +24,7 @@ class NearbyPlacesViewModel @Inject constructor(
     private val locationMapper: LocationMapper,
     private val getNearbyPlaces: GetNearbyPlaces,
     private val getNearbyPlaceDetail: GetNearbyPlaceDetail,
+    private val getNearbyPlacesOrderedByDistance: GetNearbyPlacesOrderedByDistance,
     private val placeMapper: PlaceMapper
 ) : ViewModel() {
 
@@ -89,6 +92,14 @@ class NearbyPlacesViewModel @Inject constructor(
     }
 
     fun getNearbyPlacesList() {
+        if (selectedSortingOption == SORT_DISTANCE && selectedPlaceType != null) {
+            getOrderedByDistanceList()
+        } else {
+            getUnOrderedList()
+        }
+    }
+
+    private fun getUnOrderedList() {
         _loading.value = true
 
         getNearbyPlaces.execute(
@@ -105,6 +116,31 @@ class NearbyPlacesViewModel @Inject constructor(
                 currentLocation.lat.toString(),
                 currentLocation.lng.toString(),
                 selectedPlaceType
+            )
+        )
+    }
+
+    private fun getOrderedByDistanceList() {
+        _loading.value = true
+
+        if (selectedPlaceType == null) {
+            selectedPlaceType = FILTER_RESTAURANTS
+        }
+
+        getNearbyPlacesOrderedByDistance.execute(
+            Consumer {
+                _loading.value = false
+                _places.value = placeMapper.map(it)
+            },
+            Consumer {
+                Log.e(TAG, it.localizedMessage ?: it.message ?: "Could not get nearby places")
+                _loading.value = false
+                _error.value = ERROR_NEARBY_PLACES_DISTANCE
+            },
+            GetNearbyPlacesOrderedByDistance.Params(
+                currentLocation.lat.toString(),
+                currentLocation.lng.toString(),
+                selectedPlaceType ?: FILTER_RESTAURANTS
             )
         )
     }
@@ -131,11 +167,7 @@ class NearbyPlacesViewModel @Inject constructor(
             return when (selectedSortingOption) {
                 SORT_NAME -> placesList.sortedBy { it.name }
                 SORT_OPEN_CLOSED -> placesList.sortedByDescending { it.openNow }
-                SORT_DISTANCE -> placesList.sortedBy {
-                    it.location?.getDistance(
-                        currentLocation
-                    )
-                }
+                SORT_DISTANCE -> placesList.sortedBy { it.location?.getDistance(currentLocation) }
                 else -> placesList.sortedByDescending { it.rating }
             }
         } ?: run {
@@ -144,11 +176,16 @@ class NearbyPlacesViewModel @Inject constructor(
     }
 
     fun sortList() {
-        _places.value = applySorting(_places.value)
+        if (selectedSortingOption == SORT_DISTANCE && selectedPlaceType != null) {
+            getOrderedByDistanceList()
+        } else {
+            _places.value = applySorting(_places.value)
+        }
     }
 
     override fun onCleared() {
         getNearbyPlaces.dispose()
+        getNearbyPlacesOrderedByDistance.dispose()
         getCurrentLocation.dispose()
         getNearbyPlaceDetail.dispose()
         super.onCleared()
@@ -161,6 +198,7 @@ class NearbyPlacesViewModel @Inject constructor(
         const val ERROR_LOCATION = 1001
         const val ERROR_NEARBY_PLACES = 1002
         const val ERROR_NEARBY_PLACE_DETAIL = 1003
+        const val ERROR_NEARBY_PLACES_DISTANCE = 1004
 
         const val SORT_RATING = 0
         const val SORT_NAME = 1

@@ -1,10 +1,14 @@
 package cat.jorcollmar.nearbyhelper.di
 
+import android.content.Context
+import cat.jorcollmar.data.repository.LocationRepository
 import cat.jorcollmar.data.repository.NearbyPlacesRepository
 import cat.jorcollmar.data.source.GooglePlacesWebservice
+import cat.jorcollmar.domain.repository.LocationRepositoryContract
 import cat.jorcollmar.domain.repository.NearbyPlacesRepositoryContract
 import cat.jorcollmar.nearbyhelper.BuildConfig
-import cat.jorcollmar.nearbyhelper.ui.nearbyhelper.view.NearbyHelperActivity
+import cat.jorcollmar.nearbyhelper.ui.NearbyHelperActivity
+import cat.jorcollmar.nearbyhelper.ui.application.NearbyHelperApplication
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlaceDetailFragment
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesListFragment
 import com.mocadc.mocadc.domain.common.SchedulersFacade
@@ -35,8 +39,16 @@ abstract class NearbyHelperModule {
     @Binds
     abstract fun bindNearbyPlacesRepository(repository: NearbyPlacesRepository): NearbyPlacesRepositoryContract
 
+    @Binds
+    abstract fun bindLocationRepository(repository: LocationRepository): LocationRepositoryContract
+
     @Module
     companion object {
+
+        @Provides
+        fun provideContext(nearbyHelper: NearbyHelperApplication): Context {
+            return nearbyHelper
+        }
 
         @Provides
         @Singleton

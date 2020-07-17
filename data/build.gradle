@@ -45,6 +45,9 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_rxadapter_version"
 
+    // Play services (Location)
+    implementation "com.google.android.gms:play-services-location:$play_services_location_version"
+
     // Test
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

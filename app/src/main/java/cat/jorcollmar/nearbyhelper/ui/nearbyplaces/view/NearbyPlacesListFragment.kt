@@ -15,10 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cat.jorcollmar.nearbyhelper.R
-import cat.jorcollmar.nearbyhelper.common.extension.observe
 import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlacesListBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesAdapter
+import cat.jorcollmar.nearbyhelper.commons.extensions.observe
+import cat.jorcollmar.nearbyhelper.commons.managers.PermissionManager
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
@@ -29,6 +30,9 @@ class NearbyPlacesListFragment : DaggerFragment() {
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var permissionManager: PermissionManager
 
     @Inject
     lateinit var viewModelFactory: NearbyPlacesViewModelFactory
@@ -52,32 +56,17 @@ class NearbyPlacesListFragment : DaggerFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        requestLocationPermission()
+        initObservers()
+    }
 
-        observe(viewModel.loading, {
-            it?.let {
-                binding.prbNearbyPlaces.visibility = if (it) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                binding.rcvNearbyPlaces.visibility = if (it) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
-            } ?: run {
-                binding.prbNearbyPlaces.visibility = View.GONE
-            }
-        })
-
-        observe(viewModel.places, {
-            binding.prbNearbyPlaces.visibility = View.GONE
-            it?.let {
-                placesAdapter.updateItems(it)
-            } ?: run {
-                // TODO: Show error to user to retry WS call
-            }
-        })
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        viewModel.onRequestPermissionResult(requestCode, grantResults)
     }
 
     override fun onCreateView(
@@ -127,6 +116,42 @@ class NearbyPlacesListFragment : DaggerFragment() {
             R.id.action_order_by -> onOrderByClicked()
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun requestLocationPermission() {
+        if (permissionManager.isLocationPermissionGranted(requireContext())) {
+            viewModel.onLocationPermissionGranted()
+        } else {
+            permissionManager.requestLocationPermission(this)
+        }
+    }
+
+    private fun initObservers() {
+        observe(viewModel.loading, {
+            it?.let {
+                binding.prbNearbyPlaces.visibility = if (it) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+                binding.rcvNearbyPlaces.visibility = if (it) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+            } ?: run {
+                binding.prbNearbyPlaces.visibility = View.GONE
+            }
+        })
+
+        observe(viewModel.places, {
+            binding.prbNearbyPlaces.visibility = View.GONE
+            it?.let {
+                placesAdapter.updateItems(it, viewModel.currentLocation)
+            } ?: run {
+                // TODO: Show error to user to retry WS call
+            }
+        })
     }
 
     private fun onFilterClicked(item: MenuItem, filterType: String?): Boolean {

@@ -1,4 +1,4 @@
-package cat.jorcollmar.nearbyhelper.common.extension
+package cat.jorcollmar.nearbyhelper.commons.extensions
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData

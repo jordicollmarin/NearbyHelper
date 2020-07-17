@@ -13,6 +13,8 @@
     <string name="nearby_places_list_filter_restaurants">Restaurants</string>
     <string name="nearby_places_list_item_icon">Place icon (Bar, Cafe or Restaurant)</string>
     <string name="nearby_places_list_item_rating">Rating: %1$s</string>
+    <string name="nearby_places_list_item_distance">Distance: %1$s km</string>
+    <string name="nearby_places_list_item_distance_unknown">Unknown</string>
     <string name="nearby_places_list_item_open">Open</string>
     <string name="nearby_places_list_item_closed">Closed</string>
     <string-array name="nearby_places_list_order_options">

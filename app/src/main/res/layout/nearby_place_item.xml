@@ -47,11 +47,24 @@
             android:layout_marginStart="@dimen/dimen_10"
             android:layout_marginEnd="@dimen/dimen_10"
             android:textSize="@dimen/text_subtitle"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txvNearbyPlaceDistance"
             app:layout_constraintEnd_toStartOf="@id/txvNearbyPlaceOpenNow"
             app:layout_constraintStart_toEndOf="@id/imvNearbyPlaceIcon"
             app:layout_constraintTop_toBottomOf="@+id/txvNearbyPlaceName"
             tools:text="Rating: 4,9 (255)" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceDistance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:textSize="@dimen/text_subtitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/txvNearbyPlaceOpenNow"
+            app:layout_constraintStart_toEndOf="@id/imvNearbyPlaceIcon"
+            app:layout_constraintTop_toBottomOf="@+id/txvNearbyPlaceRating"
+            tools:text="Distance: 4 Km" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txvNearbyPlaceOpenNow"

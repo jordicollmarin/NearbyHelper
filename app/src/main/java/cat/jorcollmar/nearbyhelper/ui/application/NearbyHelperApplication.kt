@@ -6,7 +6,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class NearbyHelperApplication : Application(), HasAndroidInjector {
+class NearbyHelperApplication @Inject constructor() : Application(), HasAndroidInjector {
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
@@ -14,6 +14,6 @@ class NearbyHelperApplication : Application(), HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerAppComponent.create().inject(this)
+        DaggerAppComponent.builder().application(this).build().inject(this)
     }
 }

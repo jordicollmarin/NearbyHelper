@@ -1,4 +1,4 @@
-package cat.jorcollmar.nearbyhelper.common.extension
+package cat.jorcollmar.nearbyhelper.commons.extensions
 
 import android.net.Uri
 import android.widget.ImageView

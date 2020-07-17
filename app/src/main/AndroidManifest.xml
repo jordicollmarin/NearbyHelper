@@ -3,6 +3,8 @@
     package="cat.jorcollmar.nearbyhelper">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".ui.application.NearbyHelperApplication"
@@ -13,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Splash">
         <activity
-            android:name=".ui.nearbyhelper.view.NearbyHelperActivity"
+            android:name=".ui.NearbyHelperActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

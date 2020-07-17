@@ -1,4 +1,4 @@
-package cat.jorcollmar.data.source.nearbyplaces
+package cat.jorcollmar.data.source.googleplaces
 
 import cat.jorcollmar.data.BuildConfig
 import cat.jorcollmar.data.mapper.dto.PlaceDtoMapper
@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class NearbyPlacesApiDataSource @Inject constructor(
+class GooglePlacesApiDataSource @Inject constructor(
     private val googlePlacesWebservice: GooglePlacesWebservice,
     private val placeDtoMapper: PlaceDtoMapper
 ) {

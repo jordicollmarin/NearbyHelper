@@ -34,4 +34,7 @@
 
     <!-- Nearby place detail -->
     <string name="nearby_place_detail_fragment_label">Nearby place detail</string>
+    <string name="nearby_place_detail_call">Call</string>
+    <string name="nearby_place_detail_price_level">%1$s (1 to 5)</string>
+    <string name="nearby_place_detail_phone_not_available">Phone unavailable</string>
 </resources>

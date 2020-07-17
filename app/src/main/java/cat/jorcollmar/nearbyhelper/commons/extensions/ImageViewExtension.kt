@@ -14,6 +14,23 @@ fun ImageView.loadImage(uri: Uri?) {
         .placeholder(R.drawable.ic_placeholder)
         .into(this, object : Callback {
             override fun onSuccess() {}
+
+            override fun onError(e: Exception) {
+                setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_image_error))
+            }
+        })
+}
+
+fun ImageView.loadImageFit(uri: Uri?) {
+    Picasso
+        .get()
+        .load(uri)
+        .placeholder(R.drawable.ic_placeholder)
+        .into(this, object : Callback {
+            override fun onSuccess() {
+                scaleType = ImageView.ScaleType.CENTER_CROP
+            }
+
             override fun onError(e: Exception) {
                 setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_image_error))
             }

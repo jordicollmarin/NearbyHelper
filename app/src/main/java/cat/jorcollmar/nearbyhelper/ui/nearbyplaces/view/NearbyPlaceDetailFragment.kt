@@ -1,8 +1,12 @@
 package cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +16,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import cat.jorcollmar.nearbyhelper.R
 import cat.jorcollmar.nearbyhelper.commons.extensions.observe
+import cat.jorcollmar.nearbyhelper.commons.extensions.round
 import cat.jorcollmar.nearbyhelper.commons.factories.AlertDialogFactory
 import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlaceDetailBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_NEARBY_PLACE_DETAIL
+import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesImagesAdapter
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
+import kotlin.math.abs
 
 class NearbyPlaceDetailFragment : DaggerFragment() {
     lateinit var binding: FragmentNearbyPlaceDetailBinding
@@ -35,6 +44,10 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
             requireActivity(),
             viewModelFactory
         ).get(NearbyPlacesViewModel::class.java)
+    }
+
+    private val imagesAdapter: NearbyPlacesImagesAdapter by lazy {
+        NearbyPlacesImagesAdapter()
     }
 
     override fun onAttach(context: Context) {
@@ -59,37 +72,61 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.title =
-            viewModel.selectedPlace.value?.name
+        binding.vwpNearbyPlaceDetail.adapter = imagesAdapter
+        binding.vwpNearbyPlaceDetail.offscreenPageLimit = 2
+        binding.fabNearbyPlaceDetail.setOnClickListener { callToPlace() }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.hide()
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarNearbyPlaceDetail)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> findNavController().navigateUp()
+            R.id.action_call -> callToPlace()
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun callToPlace(): Boolean {
+        viewModel.selectedPlace.value?.internationalPhoneNumber?.let {
+            startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", it, null)))
+        } ?: run {
+            Snackbar.make(
+                binding.root,
+                getString(R.string.nearby_place_detail_phone_not_available),
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+
+        return false
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_detail, menu)
     }
 
     private fun initObservers() {
         observe(viewModel.loading, {
             it?.let {
-                binding.prbNearbyPlaces.visibility = if (it) {
-                    View.VISIBLE
+                if (it) {
+                    binding.prbNearbyPlaceDetail.visibility = View.VISIBLE
+                    binding.scvContentNearbyPlaceDetail.visibility = View.GONE
+                    binding.ablNearbyPlaceDetail.visibility = View.GONE
+                    binding.fabNearbyPlaceDetail.visibility = View.GONE
                 } else {
-                    View.GONE
-                }
-                binding.rcvNearbyPlaces.visibility = if (it) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
+                    binding.prbNearbyPlaceDetail.visibility = View.GONE
+                    binding.scvContentNearbyPlaceDetail.visibility = View.VISIBLE
+                    binding.ablNearbyPlaceDetail.visibility = View.VISIBLE
+                    binding.fabNearbyPlaceDetail.visibility = View.VISIBLE
                 }
             } ?: run {
-                binding.prbNearbyPlaces.visibility = View.GONE
+                binding.prbNearbyPlaceDetail.visibility = View.GONE
             }
         })
 
@@ -109,7 +146,45 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
     }
 
     private fun loadNearbyPlaceData(place: Place) {
-        TODO("Not yet implemented")
+        with(place) {
+            binding.ctlNearbyPlaceDetail.title = name
+
+            photos?.let { photos ->
+                imagesAdapter.updateItems(photos.map { it.getPhotoUri() })
+            } ?: run {
+                imagesAdapter.setEmptyState()
+            }
+
+            rating?.let {
+                binding.txvNearbyPlaceDetailRating.visibility = View.VISIBLE
+                binding.txvNearbyPlaceDetailRating.text = context?.getString(
+                    R.string.nearby_places_list_item_rating,
+                    place.getRatingFormatted()
+                )
+            } ?: run {
+                binding.txvNearbyPlaceDetailRating.visibility = View.GONE
+            }
+
+            location?.let {
+                binding.txvNearbyPlaceDetailDistance.visibility = View.VISIBLE
+                binding.txvNearbyPlaceDetailDistance.text = context?.getString(
+                    R.string.nearby_places_list_item_distance,
+                    it.getDistance(viewModel.currentLocation)?.round(2)
+                        ?: run { context?.getString(R.string.nearby_places_list_item_distance_unknown) }
+                )
+            } ?: run {
+                binding.txvNearbyPlaceDetailDistance.visibility = View.GONE
+            }
+
+            priceLevel?.let {
+                binding.txvNearbyPlaceDetailPriceLevel.visibility = View.GONE
+                binding.txvNearbyPlaceDetailPriceLevel.text =
+                    context?.getString(R.string.nearby_place_detail_price_level, it.toString())
+            } ?: run {
+                binding.txvNearbyPlaceDetailPriceLevel.visibility =
+                    View.VISIBLE
+            }
+        }
     }
 
     private fun showDetailInfoErrorDialog() {

@@ -13,4 +13,7 @@
     <dimen name="item_icon_width">45dp</dimen>
     <dimen name="item_min_height">75dp</dimen>
 
+    <!-- Nearby place detail -->
+    <dimen name="nearby_place_images_height">500dp</dimen>
+
 </resources>

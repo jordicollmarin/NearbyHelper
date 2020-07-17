@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scvContentNearbyPlaceDetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceDetailRating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Rating: 4,9 (255)" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceDetailDistance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txvNearbyPlaceDetailRating"
+            tools:text="Distance: 4 Km" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceDetailPriceLevel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txvNearbyPlaceDetailDistance"
+            tools:text="Price Level: 4 (1 to 5)" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

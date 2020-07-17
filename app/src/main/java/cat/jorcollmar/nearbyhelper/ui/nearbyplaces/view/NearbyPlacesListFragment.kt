@@ -82,13 +82,10 @@ class NearbyPlacesListFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.show()
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.rcvNearbyPlaces.layoutManager = LinearLayoutManager(context)
         binding.rcvNearbyPlaces.adapter = placesAdapter
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -107,7 +104,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_main, menu)
+        inflater.inflate(R.menu.menu_list, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

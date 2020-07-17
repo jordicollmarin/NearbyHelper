@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -98,6 +99,20 @@ class NearbyPlacesListFragment : DaggerFragment() {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        viewModel.selectedPlaceType?.let {
+            when (it) {
+                FILTER_BARS -> menu.findItem(R.id.action_filter_bars).setChecked(true)
+                FILTER_CAFES -> menu.findItem(R.id.action_filter_cafes).setChecked(true)
+                FILTER_RESTAURANTS -> menu.findItem(R.id.action_filter_restaurants).setChecked(true)
+                else -> menu.findItem(R.id.action_filter_all).setChecked(true)
+            }
+        } ?: run {
+            menu.findItem(R.id.action_filter_all).setChecked(true)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)
@@ -121,7 +136,17 @@ class NearbyPlacesListFragment : DaggerFragment() {
     }
 
     private fun onOrderByClicked(): Boolean {
-        // TODO: Open Order by (Name, Open/Closed, etc.)
+        AlertDialog.Builder(requireContext(), R.style.Theme_MaterialComponents_Light_Dialog)
+            .setTitle(getString(R.string.nearby_places_list_order_by))
+            .setSingleChoiceItems(
+                resources.getStringArray(R.array.nearby_places_list_order_options),
+                viewModel.selectedSortingOption
+            ) { dialog, which ->
+                dialog.dismiss()
+                viewModel.selectedSortingOption = which
+                viewModel.sortList()
+            }
+            .create().show()
         return false
     }
 

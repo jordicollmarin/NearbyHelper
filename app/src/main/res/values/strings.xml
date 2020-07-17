@@ -15,6 +15,11 @@
     <string name="nearby_places_list_item_rating">Rating: %1$s</string>
     <string name="nearby_places_list_item_open">Open</string>
     <string name="nearby_places_list_item_closed">Closed</string>
+    <string-array name="nearby_places_list_order_options">
+        <item>Rating</item>
+        <item>Name</item>
+        <item>Open/Closed</item>
+    </string-array>
 
     <!-- Nearby place detail -->
     <string name="nearby_place_detail_fragment_label">Nearby place detail</string>

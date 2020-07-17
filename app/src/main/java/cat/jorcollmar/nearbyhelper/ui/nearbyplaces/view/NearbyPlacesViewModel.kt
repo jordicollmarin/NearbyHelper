@@ -16,10 +16,11 @@ class NearbyPlacesViewModel @Inject constructor(
 ) : ViewModel() {
 
     lateinit var selectedPlace: Place
+    var selectedSortingOption: Int = SORT_RATING
     var selectedPlaceType: String? = null
         set(value) {
-            getNearbyPlacesList()
             field = value
+            getNearbyPlacesList()
         }
 
     private val _loading = MutableLiveData<Boolean>()
@@ -40,7 +41,7 @@ class NearbyPlacesViewModel @Inject constructor(
         getNearbyPlaces.execute(
             Consumer {
                 _loading.value = false
-                _places.value = placeMapper.map(it)
+                _places.value = applySorting(placeMapper.map(it))
             },
             Consumer {
                 Log.e(TAG, it.localizedMessage ?: it.message ?: "Could not get nearby places")
@@ -52,6 +53,22 @@ class NearbyPlacesViewModel @Inject constructor(
         )
     }
 
+    private fun applySorting(places: List<Place>): List<Place> {
+        return when (selectedSortingOption) {
+            SORT_NAME -> places.sortedBy { it.name }
+            SORT_OPEN_CLOSED -> places.sortedBy { it.openNow }.reversed()
+            else -> places.sortedBy { it.rating }.reversed()
+        }
+    }
+
+    fun sortList() {
+        _places.value = when (selectedSortingOption) {
+            SORT_NAME -> _places.value?.sortedBy { it.name }
+            SORT_OPEN_CLOSED -> _places.value?.sortedBy { it.openNow }?.reversed()
+            else -> _places.value?.sortedBy { it.rating }?.reversed()
+        }
+    }
+
     override fun onCleared() {
         getNearbyPlaces.dispose()
         super.onCleared()
@@ -59,5 +76,9 @@ class NearbyPlacesViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "NearbyPlacesViewModel"
+
+        const val SORT_RATING = 0
+        const val SORT_NAME = 1
+        const val SORT_OPEN_CLOSED = 2
     }
 }

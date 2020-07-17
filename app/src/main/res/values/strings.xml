@@ -20,6 +20,7 @@
     <string-array name="nearby_places_list_order_options">
         <item>Rating</item>
         <item>Name</item>
+        <item>Distance</item>
         <item>Open/Closed</item>
     </string-array>
 

@@ -96,20 +96,25 @@ class NearbyPlacesViewModel @Inject constructor(
         )
     }
 
-    private fun applySorting(places: List<Place>): List<Place> {
-        return when (selectedSortingOption) {
-            SORT_NAME -> places.sortedBy { it.name }
-            SORT_OPEN_CLOSED -> places.sortedByDescending { it.openNow }
-            else -> places.sortedByDescending { it.rating }
+    private fun applySorting(places: List<Place>?): List<Place> {
+        places?.let { placesList ->
+            return when (selectedSortingOption) {
+                SORT_NAME -> placesList.sortedBy { it.name }
+                SORT_OPEN_CLOSED -> placesList.sortedByDescending { it.openNow }
+                SORT_DISTANCE -> placesList.sortedBy {
+                    it.location?.getDistance(
+                        currentLocation
+                    )
+                }
+                else -> placesList.sortedByDescending { it.rating }
+            }
+        } ?: run {
+            return listOf()
         }
     }
 
     fun sortList() {
-        _places.value = when (selectedSortingOption) {
-            SORT_NAME -> _places.value?.sortedBy { it.name }
-            SORT_OPEN_CLOSED -> _places.value?.sortedByDescending { it.openNow }
-            else -> _places.value?.sortedByDescending { it.rating }
-        }
+        _places.value = applySorting(_places.value)
     }
 
     override fun onCleared() {
@@ -122,6 +127,7 @@ class NearbyPlacesViewModel @Inject constructor(
 
         const val SORT_RATING = 0
         const val SORT_NAME = 1
-        const val SORT_OPEN_CLOSED = 2
+        const val SORT_DISTANCE = 2
+        const val SORT_OPEN_CLOSED = 3
     }
 }

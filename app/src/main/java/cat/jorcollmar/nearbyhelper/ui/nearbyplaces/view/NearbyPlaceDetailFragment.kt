@@ -22,13 +22,11 @@ import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlaceDetailBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_NEARBY_PLACE_DETAIL
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesImagesAdapter
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
-import kotlin.math.abs
 
 class NearbyPlaceDetailFragment : DaggerFragment() {
     lateinit var binding: FragmentNearbyPlaceDetailBinding
@@ -79,7 +77,6 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.hide()
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbarNearbyPlaceDetail)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -116,12 +113,12 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
             it?.let {
                 if (it) {
                     binding.prbNearbyPlaceDetail.visibility = View.VISIBLE
-                    binding.scvContentNearbyPlaceDetail.visibility = View.GONE
+                    binding.lytContent.scvContentNearbyPlaceDetail.visibility = View.GONE
                     binding.ablNearbyPlaceDetail.visibility = View.GONE
                     binding.fabNearbyPlaceDetail.visibility = View.GONE
                 } else {
                     binding.prbNearbyPlaceDetail.visibility = View.GONE
-                    binding.scvContentNearbyPlaceDetail.visibility = View.VISIBLE
+                    binding.lytContent.scvContentNearbyPlaceDetail.visibility = View.VISIBLE
                     binding.ablNearbyPlaceDetail.visibility = View.VISIBLE
                     binding.fabNearbyPlaceDetail.visibility = View.VISIBLE
                 }
@@ -156,32 +153,32 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
             }
 
             rating?.let {
-                binding.txvNearbyPlaceDetailRating.visibility = View.VISIBLE
-                binding.txvNearbyPlaceDetailRating.text = context?.getString(
+                binding.lytContent.txvNearbyPlaceDetailRating.visibility = View.VISIBLE
+                binding.lytContent.txvNearbyPlaceDetailRating.text = context?.getString(
                     R.string.nearby_places_list_item_rating,
                     place.getRatingFormatted()
                 )
             } ?: run {
-                binding.txvNearbyPlaceDetailRating.visibility = View.GONE
+                binding.lytContent.txvNearbyPlaceDetailRating.visibility = View.GONE
             }
 
             location?.let {
-                binding.txvNearbyPlaceDetailDistance.visibility = View.VISIBLE
-                binding.txvNearbyPlaceDetailDistance.text = context?.getString(
+                binding.lytContent.txvNearbyPlaceDetailDistance.visibility = View.VISIBLE
+                binding.lytContent.txvNearbyPlaceDetailDistance.text = context?.getString(
                     R.string.nearby_places_list_item_distance,
                     it.getDistance(viewModel.currentLocation)?.round(2)
                         ?: run { context?.getString(R.string.nearby_places_list_item_distance_unknown) }
                 )
             } ?: run {
-                binding.txvNearbyPlaceDetailDistance.visibility = View.GONE
+                binding.lytContent.txvNearbyPlaceDetailDistance.visibility = View.GONE
             }
 
             priceLevel?.let {
-                binding.txvNearbyPlaceDetailPriceLevel.visibility = View.GONE
-                binding.txvNearbyPlaceDetailPriceLevel.text =
+                binding.lytContent.txvNearbyPlaceDetailPriceLevel.visibility = View.GONE
+                binding.lytContent.txvNearbyPlaceDetailPriceLevel.text =
                     context?.getString(R.string.nearby_place_detail_price_level, it.toString())
             } ?: run {
-                binding.txvNearbyPlaceDetailPriceLevel.visibility =
+                binding.lytContent.txvNearbyPlaceDetailPriceLevel.visibility =
                     View.VISIBLE
             }
         }

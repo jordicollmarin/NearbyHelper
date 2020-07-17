@@ -15,6 +15,5 @@ class NearbyHelperActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNearbyHelperBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(findViewById(R.id.toolbar))
     }
 }

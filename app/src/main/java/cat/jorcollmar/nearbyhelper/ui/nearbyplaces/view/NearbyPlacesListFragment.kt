@@ -60,7 +60,6 @@ class NearbyPlacesListFragment : DaggerFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         requestLocationPermission()
-        initObservers()
     }
 
     override fun onRequestPermissionsResult(
@@ -84,6 +83,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rcvNearbyPlaces.layoutManager = LinearLayoutManager(context)
         binding.rcvNearbyPlaces.adapter = placesAdapter
+        initObservers()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -131,7 +131,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
     }
 
     private fun initObservers() {
-        observe(viewModel.loading, {
+        viewLifecycleOwner.observe(viewModel.loading, {
             it?.let {
                 binding.prbNearbyPlaces.visibility = if (it) {
                     View.VISIBLE
@@ -148,14 +148,14 @@ class NearbyPlacesListFragment : DaggerFragment() {
             }
         })
 
-        observe(viewModel.places, {
+        viewLifecycleOwner.observe(viewModel.places, {
             binding.prbNearbyPlaces.visibility = View.GONE
             it?.let {
                 placesAdapter.updateItems(it, viewModel.currentLocation)
             }
         })
 
-        observe(viewModel.error, {
+        viewLifecycleOwner.observe(viewModel.error, {
             it?.let {
                 when (it) {
                     ERROR_PERMISSION_DENIED -> showPermissionDeniedDialog()

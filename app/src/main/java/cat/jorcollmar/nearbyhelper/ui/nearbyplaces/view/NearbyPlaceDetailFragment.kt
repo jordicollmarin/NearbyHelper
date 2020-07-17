@@ -56,7 +56,6 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        initObservers()
         viewModel.getNearbyPlaceDetail()
     }
 
@@ -70,6 +69,7 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObservers()
         binding.vwpNearbyPlaceDetail.adapter = imagesAdapter
         binding.vwpNearbyPlaceDetail.offscreenPageLimit = 2
         binding.fabNearbyPlaceDetail.setOnClickListener { callToPlace() }
@@ -109,7 +109,7 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
     }
 
     private fun initObservers() {
-        observe(viewModel.loading, {
+        viewLifecycleOwner.observe(viewModel.loading, {
             it?.let {
                 if (it) {
                     binding.prbNearbyPlaceDetail.visibility = View.VISIBLE
@@ -127,13 +127,13 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
             }
         })
 
-        observe(viewModel.selectedPlace, {
+        viewLifecycleOwner.observe(viewModel.selectedPlace, {
             it?.let { place ->
                 loadNearbyPlaceData(place)
             }
         })
 
-        observe(viewModel.error, {
+        viewLifecycleOwner.observe(viewModel.error, {
             it?.let {
                 when (it) {
                     ERROR_NEARBY_PLACE_DETAIL -> showDetailInfoErrorDialog()

@@ -61,7 +61,9 @@ class NearbyPlacesViewModel @Inject constructor(
     }
 
     fun onLocationPermissionGranted() {
-        getCurrentLocation()
+        if (_places.value == null) {
+            getCurrentLocation()
+        }
     }
 
     private fun onLocationPermissionDenied() {

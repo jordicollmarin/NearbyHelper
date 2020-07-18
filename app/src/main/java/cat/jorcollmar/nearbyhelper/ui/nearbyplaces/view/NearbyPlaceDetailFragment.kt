@@ -22,11 +22,13 @@ import cat.jorcollmar.nearbyhelper.databinding.FragmentNearbyPlaceDetailBinding
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.model.Place
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesViewModel.Companion.ERROR_NEARBY_PLACE_DETAIL
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.adapter.NearbyPlacesImagesAdapter
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
+import kotlin.math.abs
 
 class NearbyPlaceDetailFragment : DaggerFragment() {
     lateinit var binding: FragmentNearbyPlaceDetailBinding
@@ -70,15 +72,32 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        setUpLayout()
+    }
+
+    private fun setUpLayout() {
         binding.vwpNearbyPlaceDetail.adapter = imagesAdapter
         binding.vwpNearbyPlaceDetail.offscreenPageLimit = 2
         binding.fabNearbyPlaceDetail.setOnClickListener { callToPlace() }
+        binding.ablNearbyPlaceDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener
+        { appBarLayout, verticalOffset ->
+            if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
+                binding.toolbarNearbyPlaceDetail.menu.findItem(R.id.action_call).isVisible = true
+            } else {
+                binding.toolbarNearbyPlaceDetail.menu.findItem(R.id.action_call).isVisible = false
+            }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbarNearbyPlaceDetail)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.findItem(R.id.action_call).isChecked = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

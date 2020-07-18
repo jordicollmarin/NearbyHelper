@@ -12,6 +12,10 @@ buildscript {
     ext.navigation_component_version = '2.2.2'
     ext.play_services_location_version = '17.0.0'
 
+    // Test
+    ext.junit_version = '4.13'
+    ext.mockk_version = '1.9'
+
     repositories {
         google()
         jcenter()

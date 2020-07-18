@@ -11,7 +11,7 @@ import cat.jorcollmar.nearbyhelper.ui.NearbyHelperActivity
 import cat.jorcollmar.nearbyhelper.ui.application.NearbyHelperApplication
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlaceDetailFragment
 import cat.jorcollmar.nearbyhelper.ui.nearbyplaces.view.NearbyPlacesListFragment
-import com.mocadc.mocadc.domain.common.SchedulersFacade
+import cat.jorcollmar.domain.common.SchedulersFacade
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

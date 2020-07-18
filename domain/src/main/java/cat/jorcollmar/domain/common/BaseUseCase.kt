@@ -1,6 +1,5 @@
 package cat.jorcollmar.domain.common
 
-import com.mocadc.mocadc.domain.common.SchedulersFacade
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable

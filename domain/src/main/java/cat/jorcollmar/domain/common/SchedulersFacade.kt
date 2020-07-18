@@ -1,4 +1,4 @@
-package com.mocadc.mocadc.domain.common
+package cat.jorcollmar.domain.common
 
 import io.reactivex.Scheduler
 

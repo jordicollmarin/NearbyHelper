@@ -12,35 +12,33 @@ import org.junit.Before
 import org.junit.Test
 
 class GetCurrentLocationTest : BaseUseCaseTest() {
-    private val locationRepositoryContract: LocationRepositoryContract = mockk(relaxed = true)
+    private val locationRepository: LocationRepositoryContract = mockk(relaxed = true)
     private lateinit var getCurrentLocation: GetCurrentLocation
 
     @Before
     fun setUpTest() {
-        getCurrentLocation = GetCurrentLocation(schedulersFacade, locationRepositoryContract)
+        getCurrentLocation = GetCurrentLocation(schedulersFacade, locationRepository)
     }
 
     @Test
-    fun `Given GetCurrentLocation execution, Then getCurrentLocation is executed from repository`() {
+    fun `Given GetCurrentLocation execution, Then getCurrentLocation is invoked from repository`() {
         val locationDomainMock: LocationDomain = mockk()
 
-        every { locationRepositoryContract.getCurrentLocation() } returns Single.just(
-            locationDomainMock
-        )
+        every { locationRepository.getCurrentLocation() } returns Single.just(locationDomainMock)
 
         captureResultForUseCase(
             singleUseCase = getCurrentLocation,
             params = GetCurrentLocation.Params()
         )
 
-        verify { locationRepositoryContract.getCurrentLocation() }
+        verify { locationRepository.getCurrentLocation() }
     }
 
     @Test
-    fun `Given location returned by the repository, Then same location is returned by the useCase`() {
+    fun `Given GetCurrentLocation execution, When location is returned by the repository, Then same location is returned by the useCase`() {
         val locationDomain = LocationDomain(0.0, 0.0)
 
-        every { locationRepositoryContract.getCurrentLocation() } returns Single.just(locationDomain)
+        every { locationRepository.getCurrentLocation() } returns Single.just(locationDomain)
 
         assertEquals(
             locationDomain,
@@ -52,10 +50,10 @@ class GetCurrentLocationTest : BaseUseCaseTest() {
     }
 
     @Test
-    fun `Given error returned by the repository, Then same error is returned by the useCase`() {
+    fun `Given GetCurrentLocation execution, When error is returned by the repository, Then same error is returned by the useCase`() {
         val throwable = Throwable("GetCurrentLocationThrowable")
 
-        every { locationRepositoryContract.getCurrentLocation() } returns Single.error(throwable)
+        every { locationRepository.getCurrentLocation() } returns Single.error(throwable)
 
         assertEquals(
             throwable,

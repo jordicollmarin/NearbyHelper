@@ -16,6 +16,8 @@ class GetNearbyPlaceDetailTest : BaseUseCaseTest() {
     private val nearbyPlacesRepository: NearbyPlacesRepositoryContract = mockk(relaxed = true)
     private lateinit var getNearbyPlaceDetail: GetNearbyPlaceDetail
 
+    private val passedId = "placeId"
+
     @Before
     fun setUpTest() {
         getNearbyPlaceDetail = GetNearbyPlaceDetail(schedulersFacade, nearbyPlacesRepository)
@@ -23,7 +25,6 @@ class GetNearbyPlaceDetailTest : BaseUseCaseTest() {
 
     @Test
     fun `Given GetNearbyPlaceDetail execution, When place id is passed, Then getNearbyDetail from repository is invoked with passed id`() {
-        val passedId = "placeId"
         val placeDomainMock: PlaceDomain = mockk()
 
         every { nearbyPlacesRepository.getNearbyDetail(passedId) } returns Single.just(
@@ -40,7 +41,6 @@ class GetNearbyPlaceDetailTest : BaseUseCaseTest() {
 
     @Test
     fun `Given GetNearbyPlaceDetail execution, When place is returned by the repository, Then same place is returned by the useCase`() {
-        val passedId = "placeId"
         val locationDomain = LocationDomain(0.0, 0.0)
         val placeDomain =
             PlaceDomain(passedId, "", "", 0, "", 0.0, 0, true, locationDomain, listOf())
@@ -58,7 +58,6 @@ class GetNearbyPlaceDetailTest : BaseUseCaseTest() {
 
     @Test
     fun `Given GetNearbyPlaceDetail execution, When error is returned by the repository, Then same error is returned by the useCase`() {
-        val passedId = "placeId"
         val throwable = Throwable("GetNearbyPlaceDetailThrowable")
 
         every { nearbyPlacesRepository.getNearbyDetail(passedId) } returns Single.error(throwable)

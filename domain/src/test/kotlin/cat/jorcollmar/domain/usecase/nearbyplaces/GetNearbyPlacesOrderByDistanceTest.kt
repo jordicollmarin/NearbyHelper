@@ -13,9 +13,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class GetNearbyPlacesTest : BaseUseCaseTest() {
+class GetNearbyPlacesOrderByDistanceTest : BaseUseCaseTest() {
     private val nearbyPlacesRepository: NearbyPlacesRepositoryContract = mockk(relaxed = true)
-    private lateinit var getNearbyPlaces: GetNearbyPlaces
+    private lateinit var getNearbyPlacesOrderedByDistance: GetNearbyPlacesOrderedByDistance
 
     private val passedLatitude = "latitude"
     private val passedLongitude = "longitude"
@@ -23,15 +23,16 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
 
     @Before
     fun setUpTest() {
-        getNearbyPlaces = GetNearbyPlaces(schedulersFacade, nearbyPlacesRepository)
+        getNearbyPlacesOrderedByDistance =
+            GetNearbyPlacesOrderedByDistance(schedulersFacade, nearbyPlacesRepository)
     }
 
     @Test
-    fun `Given GetNearbyPlaces execution, When latitude, longitude and placeType are passed, Then GetNearbyPlaces from repository is invoked with passed latitude, longitude and placeType`() {
+    fun `Given GetNearbyPlacesOrderedByDistance execution, When latitude, longitude and placeType are passed, Then GetNearbyPlacesOrderedByDistance from repository is invoked with passed latitude, longitude and placeType`() {
         val placeDomainListMock: List<PlaceDomain> = mockk()
 
         every {
-            nearbyPlacesRepository.getNearbyPlaces(
+            nearbyPlacesRepository.getNearbyPlacesOrderedByDistance(
                 passedLatitude,
                 passedLongitude,
                 passedPlaceType
@@ -41,8 +42,8 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
         ).toObservable()
 
         captureResultForUseCase(
-            observableUseCase = getNearbyPlaces,
-            params = GetNearbyPlaces.Params(
+            observableUseCase = getNearbyPlacesOrderedByDistance,
+            params = GetNearbyPlacesOrderedByDistance.Params(
                 passedLatitude,
                 passedLongitude,
                 passedPlaceType
@@ -50,7 +51,7 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
         )
 
         verify {
-            nearbyPlacesRepository.getNearbyPlaces(
+            nearbyPlacesRepository.getNearbyPlacesOrderedByDistance(
                 passedLatitude,
                 passedLongitude,
                 passedPlaceType
@@ -59,7 +60,7 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
     }
 
     @Test
-    fun `Given GetNearbyPlaces execution, When list of places is returned by the repository, Then same list is returned by the useCase`() {
+    fun `Given GetNearbyPlacesOrderedByDistance execution, When list of places is returned by the repository, Then same list is returned by the useCase`() {
         val placeDomainList: MutableList<PlaceDomain> = mutableListOf()
         placeDomainList.add(
             PlaceDomain(
@@ -70,7 +71,7 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
             )
         )
         every {
-            nearbyPlacesRepository.getNearbyPlaces(
+            nearbyPlacesRepository.getNearbyPlacesOrderedByDistance(
                 passedLatitude,
                 passedLongitude,
                 passedPlaceType
@@ -80,8 +81,8 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
         assertEquals(
             placeDomainList.toList(),
             captureResultForUseCase(
-                observableUseCase = getNearbyPlaces,
-                params = GetNearbyPlaces.Params(
+                observableUseCase = getNearbyPlacesOrderedByDistance,
+                params = GetNearbyPlacesOrderedByDistance.Params(
                     passedLatitude,
                     passedLongitude,
                     passedPlaceType
@@ -91,11 +92,11 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
     }
 
     @Test
-    fun `Given GetNearbyPlaces execution, When error is returned by the repository, Then same error is returned by the useCase`() {
-        val throwable = Throwable("GetNearbyPlacesThrowable")
+    fun `Given GetNearbyPlacesOrderedByDistance execution, When error is returned by the repository, Then same error is returned by the useCase`() {
+        val throwable = Throwable("GetNearbyPlacesOrderedByDistanceThrowable")
 
         every {
-            nearbyPlacesRepository.getNearbyPlaces(
+            nearbyPlacesRepository.getNearbyPlacesOrderedByDistance(
                 passedLatitude,
                 passedLongitude,
                 passedPlaceType
@@ -105,8 +106,8 @@ class GetNearbyPlacesTest : BaseUseCaseTest() {
         assertEquals(
             throwable,
             captureErrorForUseCase(
-                observableUseCase = getNearbyPlaces,
-                params = GetNearbyPlaces.Params(
+                observableUseCase = getNearbyPlacesOrderedByDistance,
+                params = GetNearbyPlacesOrderedByDistance.Params(
                     passedLatitude,
                     passedLongitude,
                     passedPlaceType

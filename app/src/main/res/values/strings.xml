@@ -19,6 +19,7 @@
     <string name="nearby_places_list_filter_bars">Bars</string>
     <string name="nearby_places_list_filter_cafes">Cafes</string>
     <string name="nearby_places_list_filter_restaurants">Restaurants</string>
+    <string name="nearby_places_list_empty">There are not results. Please, change filters to search for more nearby places.</string>
     <string name="nearby_places_list_item_icon">Place icon (Bar, Cafe or Restaurant)</string>
     <string name="nearby_places_list_item_rating">Rating: %1$s</string>
     <string name="nearby_places_list_item_distance">Distance: %1$s km</string>

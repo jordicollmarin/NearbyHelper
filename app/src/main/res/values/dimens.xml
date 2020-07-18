@@ -15,5 +15,7 @@
 
     <!-- Nearby place detail -->
     <dimen name="nearby_place_images_height">500dp</dimen>
+    <dimen name="nearby_place_detail_placeholder">30dp</dimen>
+    <dimen name="nearby_place_detail_error">30dp</dimen>
 
 </resources>

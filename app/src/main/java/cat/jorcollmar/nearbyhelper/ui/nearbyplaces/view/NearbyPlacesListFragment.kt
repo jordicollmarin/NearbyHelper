@@ -134,15 +134,12 @@ class NearbyPlacesListFragment : DaggerFragment() {
     private fun initObservers() {
         viewLifecycleOwner.observe(viewModel.loading, {
             it?.let {
-                binding.prbNearbyPlaces.visibility = if (it) {
-                    View.VISIBLE
+                if (it) {
+                    binding.prbNearbyPlaces.visibility = View.VISIBLE
+                    binding.rcvNearbyPlaces.visibility = View.GONE
                 } else {
-                    View.GONE
-                }
-                binding.rcvNearbyPlaces.visibility = if (it) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
+                    binding.prbNearbyPlaces.visibility = View.GONE
+                    binding.rcvNearbyPlaces.visibility = View.VISIBLE
                 }
             } ?: run {
                 binding.prbNearbyPlaces.visibility = View.GONE
@@ -152,7 +149,14 @@ class NearbyPlacesListFragment : DaggerFragment() {
         viewLifecycleOwner.observe(viewModel.places, {
             binding.prbNearbyPlaces.visibility = View.GONE
             it?.let {
-                placesAdapter.updateItems(it, viewModel.currentLocation)
+                if (it.isEmpty()) {
+                    binding.txvNearbyPlacesEmptyList.visibility = View.VISIBLE
+                    binding.rcvNearbyPlaces.visibility = View.GONE
+                } else {
+                    binding.txvNearbyPlacesEmptyList.visibility = View.GONE
+                    binding.rcvNearbyPlaces.visibility = View.VISIBLE
+                    placesAdapter.updateItems(it, viewModel.currentLocation)
+                }
             }
         })
 

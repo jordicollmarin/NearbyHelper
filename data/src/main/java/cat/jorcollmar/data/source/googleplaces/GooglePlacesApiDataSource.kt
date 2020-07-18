@@ -1,5 +1,6 @@
 package cat.jorcollmar.data.source.googleplaces
 
+import android.util.Log
 import cat.jorcollmar.data.BuildConfig
 import cat.jorcollmar.data.mapper.dto.PlaceDtoMapper
 import cat.jorcollmar.data.model.PlaceData
@@ -25,6 +26,7 @@ class GooglePlacesApiDataSource @Inject constructor(
                 placeType?.let { this["type"] = it }
             }
         ).flatMapObservable {
+            Log.i(TAG, "${it.status} ${it.error_message}")
             currentPageToken = it.next_page_token ?: ""
             it.results?.let { results ->
                 Single.just(placeDtoMapper.map(results)).toObservable()
@@ -44,6 +46,7 @@ class GooglePlacesApiDataSource @Inject constructor(
                 "rankby" to RANK_BY_DISTANCE_VALUE
             )
         ).flatMapObservable {
+            Log.i(TAG, "${it.status} ${it.error_message}")
             currentPageToken = it.next_page_token ?: ""
             it.results?.let { results ->
                 Single.just(placeDtoMapper.map(results)).toObservable()
@@ -56,12 +59,14 @@ class GooglePlacesApiDataSource @Inject constructor(
             placeId,
             NEARBY_DETAIL_FIELDS
         ).map {
+            Log.i(TAG, "${it.status} ${it.error_message}")
             it.result?.let { placeDto -> placeDtoMapper.map(placeDto) }
         }
 
     fun getNextResults(): Observable<List<PlaceData>> =
         googlePlacesWebservice.getMoreResults(currentPageToken, BuildConfig.GOOGLE_PLACES_API_KEY)
             .flatMapObservable { googleApiResultsDto ->
+                Log.i(TAG, "${googleApiResultsDto.status} ${googleApiResultsDto.error_message}")
                 currentPageToken = googleApiResultsDto.next_page_token ?: ""
                 googleApiResultsDto.results?.let { results ->
                     Single.just(placeDtoMapper.map(results)).toObservable()
@@ -69,6 +74,8 @@ class GooglePlacesApiDataSource @Inject constructor(
             }
 
     companion object {
+        private const val TAG = "GooglePlacesApiDataSour"
+
         const val DEFAULT_RADIUS_VALUE = "1000"
         const val RANK_BY_DISTANCE_VALUE = "distance"
         const val NEARBY_DETAIL_FIELDS =

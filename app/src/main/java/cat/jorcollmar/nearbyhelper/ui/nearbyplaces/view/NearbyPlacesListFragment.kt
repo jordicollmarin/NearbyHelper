@@ -210,7 +210,7 @@ class NearbyPlacesListFragment : DaggerFragment() {
 
     private fun onFilterClicked(item: MenuItem, filterType: String?): Boolean {
         item.isChecked = item.isChecked.not()
-        viewModel.selectedPlaceType = filterType
+        viewModel.setSelectedPlaceType(filterType)
         return false
     }
 
@@ -222,15 +222,14 @@ class NearbyPlacesListFragment : DaggerFragment() {
             viewModel.selectedSortingOption
         ) { dialog, which ->
             dialog.dismiss()
-            viewModel.selectedSortingOption = which
-            viewModel.sortList()
+            viewModel.setSelectedSortingOption(which)
         }.show()
 
         return false
     }
 
     private fun openPlaceDetail(place: Place) {
-        viewModel.selectedPlaceId = place.id
+        viewModel.setSelectedPlace(place.id)
         findNavController().navigate(NearbyPlacesListFragmentDirections.actionNearbyPlacesListFragmentToNearbyPlaceDetailFragment())
     }
 

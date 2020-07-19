@@ -58,7 +58,9 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        viewModel.getNearbyPlaceDetail()
+        if (!viewModel.placeDetailsLoaded) {
+            viewModel.getNearbyPlaceDetail()
+        }
     }
 
     override fun onCreateView(
@@ -81,11 +83,8 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
         binding.fabNearbyPlaceDetail.setOnClickListener { callToPlace() }
         binding.ablNearbyPlaceDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener
         { appBarLayout, verticalOffset ->
-            if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
-                binding.toolbarNearbyPlaceDetail.menu.findItem(R.id.action_call).isVisible = true
-            } else {
-                binding.toolbarNearbyPlaceDetail.menu.findItem(R.id.action_call).isVisible = false
-            }
+            binding.toolbarNearbyPlaceDetail.menu.findItem(R.id.action_call).isVisible =
+                abs(verticalOffset) - appBarLayout.totalScrollRange == 0
         })
     }
 
@@ -148,6 +147,7 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
 
         viewLifecycleOwner.observe(viewModel.selectedPlace, {
             it?.let { place ->
+                viewModel.changeDetailLoaded(true)
                 loadNearbyPlaceData(place)
             }
         })
@@ -218,5 +218,10 @@ class NearbyPlaceDetailFragment : DaggerFragment() {
             dialog.dismiss()
             findNavController().navigateUp()
         }.show()
+    }
+
+    override fun onDestroy() {
+        viewModel.changeDetailLoaded(false)
+        super.onDestroy()
     }
 }

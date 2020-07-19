@@ -11,6 +11,7 @@ buildscript {
     ext.picasso = '2.71828'
     ext.navigation_component_version = '2.2.2'
     ext.play_services_location_version = '17.0.0'
+    ext.androidx_core = "2.1.0"
 
     // Test
     ext.junit_version = '4.13'

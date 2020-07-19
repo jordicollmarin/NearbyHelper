@@ -28,15 +28,27 @@ class NearbyPlacesViewModel @Inject constructor(
     private val placeMapper: PlaceMapper
 ) : ViewModel() {
 
-    lateinit var currentLocation: Location
-    lateinit var selectedPlaceId: String
+    private lateinit var _selectedPlaceId: String
 
-    var selectedSortingOption: Int = SORT_RATING
-    var selectedPlaceType: String? = null
+    private var _selectedSortingOption: Int = SORT_RATING
+    val selectedSortingOption: Int
+        get() = _selectedSortingOption
+
+    private var _selectedPlaceType: String? = null
         set(value) {
             field = value
             getNearbyPlacesList()
         }
+    val selectedPlaceType: String?
+        get() = _selectedPlaceType
+
+    private lateinit var _currentLocation: Location
+    val currentLocation: Location
+        get() = _currentLocation
+
+    private var _placeDetailsLoaded: Boolean = false
+    val placeDetailsLoaded: Boolean
+        get() = _placeDetailsLoaded
 
     private val _selectedPlace = MutableLiveData<Place>()
     val selectedPlace: LiveData<Place>
@@ -79,7 +91,7 @@ class NearbyPlacesViewModel @Inject constructor(
         getCurrentLocation.execute(
             Consumer {
                 _loading.value = false
-                currentLocation = locationMapper.map(it)
+                _currentLocation = locationMapper.map(it)
                 getNearbyPlacesList()
             },
             Consumer {
@@ -92,7 +104,7 @@ class NearbyPlacesViewModel @Inject constructor(
     }
 
     fun getNearbyPlacesList() {
-        if (selectedSortingOption == SORT_DISTANCE && selectedPlaceType != null) {
+        if (_selectedSortingOption == SORT_DISTANCE && _selectedPlaceType != null) {
             getOrderedByDistanceList()
         } else {
             getUnOrderedList()
@@ -115,17 +127,13 @@ class NearbyPlacesViewModel @Inject constructor(
             GetNearbyPlaces.Params(
                 currentLocation.lat.toString(),
                 currentLocation.lng.toString(),
-                selectedPlaceType
+                _selectedPlaceType
             )
         )
     }
 
     private fun getOrderedByDistanceList() {
         _loading.value = true
-
-        if (selectedPlaceType == null) {
-            selectedPlaceType = FILTER_RESTAURANTS
-        }
 
         getNearbyPlacesOrderedByDistance.execute(
             Consumer {
@@ -140,7 +148,7 @@ class NearbyPlacesViewModel @Inject constructor(
             GetNearbyPlacesOrderedByDistance.Params(
                 currentLocation.lat.toString(),
                 currentLocation.lng.toString(),
-                selectedPlaceType ?: FILTER_RESTAURANTS
+                _selectedPlaceType ?: FILTER_RESTAURANTS
             )
         )
     }
@@ -158,16 +166,16 @@ class NearbyPlacesViewModel @Inject constructor(
                 _loading.value = false
                 _error.value = ERROR_NEARBY_PLACE_DETAIL
             },
-            GetNearbyPlaceDetail.Params(selectedPlaceId)
+            GetNearbyPlaceDetail.Params(_selectedPlaceId)
         )
     }
 
     private fun applySorting(places: List<Place>?): List<Place> {
         places?.let { placesList ->
-            return when (selectedSortingOption) {
+            return when (_selectedSortingOption) {
                 SORT_NAME -> placesList.sortedBy { it.name }
                 SORT_OPEN_CLOSED -> placesList.sortedByDescending { it.openNow }
-                SORT_DISTANCE -> placesList.sortedBy { it.location?.getDistance(currentLocation) }
+                SORT_DISTANCE -> placesList.sortedBy { it.location?.getDistance(_currentLocation) }
                 else -> placesList.sortedByDescending { it.rating }
             }
         } ?: run {
@@ -175,12 +183,29 @@ class NearbyPlacesViewModel @Inject constructor(
         }
     }
 
-    fun sortList() {
-        if (selectedSortingOption == SORT_DISTANCE && selectedPlaceType != null) {
+    private fun sortList() {
+        if (_selectedSortingOption == SORT_DISTANCE && _selectedPlaceType != null) {
             getOrderedByDistanceList()
         } else {
             _places.value = applySorting(_places.value)
         }
+    }
+
+    fun changeDetailLoaded(isLoaded: Boolean) {
+        _placeDetailsLoaded = isLoaded
+    }
+
+    fun setSelectedPlace(placeId: String) {
+        _selectedPlaceId = placeId
+    }
+
+    fun setSelectedPlaceType(placeType: String?) {
+        _selectedPlaceType = placeType
+    }
+
+    fun setSelectedSortingOption(sortingOption: Int) {
+        _selectedSortingOption = sortingOption
+        sortList()
     }
 
     override fun onCleared() {

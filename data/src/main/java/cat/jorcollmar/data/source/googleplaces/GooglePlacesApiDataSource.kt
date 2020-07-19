@@ -14,8 +14,6 @@ class GooglePlacesApiDataSource @Inject constructor(
     private val placeDtoMapper: PlaceDtoMapper
 ) {
 
-    private var currentPageToken: String = ""
-
     fun getNearbyPlaces(lat: String, lng: String, placeType: String?): Observable<List<PlaceData>> =
         googlePlacesWebservice.getNearbyPlaces(
             mutableMapOf(
@@ -27,7 +25,6 @@ class GooglePlacesApiDataSource @Inject constructor(
             }
         ).flatMapObservable {
             Log.i(TAG, "${it.status} ${it.error_message}")
-            currentPageToken = it.next_page_token ?: ""
             it.results?.let { results ->
                 Single.just(placeDtoMapper.map(results)).toObservable()
             }
@@ -47,7 +44,6 @@ class GooglePlacesApiDataSource @Inject constructor(
             )
         ).flatMapObservable {
             Log.i(TAG, "${it.status} ${it.error_message}")
-            currentPageToken = it.next_page_token ?: ""
             it.results?.let { results ->
                 Single.just(placeDtoMapper.map(results)).toObservable()
             }
@@ -62,16 +58,6 @@ class GooglePlacesApiDataSource @Inject constructor(
             Log.i(TAG, "${it.status} ${it.error_message}")
             it.result?.let { placeDto -> placeDtoMapper.map(placeDto) }
         }
-
-    fun getNextResults(): Observable<List<PlaceData>> =
-        googlePlacesWebservice.getMoreResults(currentPageToken, BuildConfig.GOOGLE_PLACES_API_KEY)
-            .flatMapObservable { googleApiResultsDto ->
-                Log.i(TAG, "${googleApiResultsDto.status} ${googleApiResultsDto.error_message}")
-                currentPageToken = googleApiResultsDto.next_page_token ?: ""
-                googleApiResultsDto.results?.let { results ->
-                    Single.just(placeDtoMapper.map(results)).toObservable()
-                }
-            }
 
     companion object {
         private const val TAG = "GooglePlacesApiDataSour"

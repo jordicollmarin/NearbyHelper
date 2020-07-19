@@ -1,5 +1,6 @@
 package cat.jorcollmar.data.source.googlefusedlocation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.os.Looper
@@ -39,6 +40,7 @@ class GoogleFusedLocationApiDataSource @Inject constructor(
     val locationObservable: Single<LocationData> =
         locationSubject.doOnSubscribe { startLocationUpdates() }
 
+    @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         fusedLocationClient.lastLocation.addOnSuccessListener(::setLocation)
         fusedLocationClient.requestLocationUpdates(

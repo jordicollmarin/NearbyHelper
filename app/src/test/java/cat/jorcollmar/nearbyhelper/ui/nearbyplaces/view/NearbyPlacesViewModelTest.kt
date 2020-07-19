@@ -43,8 +43,7 @@ class NearbyPlacesViewModelTest {
     fun `When a selected placeType is selected, Then value is saved correctly and getNearbyPlaces or getNearbyPlacesOrderedByDistance is executed`() {
         val placeType = "bar"
 
-        viewModel.selectedPlaceType = placeType
-
+        viewModel.setSelectedPlaceType(placeType)
 
     }
 }

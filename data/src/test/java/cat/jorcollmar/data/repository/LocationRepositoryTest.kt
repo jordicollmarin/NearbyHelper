@@ -52,8 +52,6 @@ class LocationRepositoryTest {
 
     @Test
     fun `When getCurrentLocation is called And locationObservable is assigned with an error, Then the error is returned `() {
-        val locationData = LocationData(0.0, 0.0)
-        val locationDomain = LocationDomain(0.0, 0.0)
         val error = Throwable("LocationProblem")
 
         every { googleFusedLocationApiDataSource.locationObservable } returns Single.error(error)

@@ -62,7 +62,7 @@ class GooglePlacesApiDataSource @Inject constructor(
     companion object {
         private const val TAG = "GooglePlacesApiDataSour"
 
-        const val DEFAULT_RADIUS_VALUE = "1000"
+        const val DEFAULT_RADIUS_VALUE = "5000"
         const val RANK_BY_DISTANCE_VALUE = "distance"
         const val NEARBY_DETAIL_FIELDS =
             "place_id,icon,name,price_level,international_phone_number,rating,user_ratings_total,opening_hours,geometry,photos"

@@ -1,6 +1,6 @@
 package cat.jorcollmar.nearbyhelper.commons.extensions
 
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class FloatExtensionKtTest {

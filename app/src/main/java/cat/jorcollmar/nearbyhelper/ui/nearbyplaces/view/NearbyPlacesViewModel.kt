@@ -127,7 +127,7 @@ class NearbyPlacesViewModel @Inject constructor(
             GetNearbyPlaces.Params(
                 currentLocation.lat.toString(),
                 currentLocation.lng.toString(),
-                _selectedPlaceType
+                _selectedPlaceType ?: FILTER_RESTAURANTS
             )
         )
     }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/item_margin"
+    android:minHeight="@dimen/item_min_height"
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/imvNearbyPlaceIcon"
+            android:layout_width="@dimen/item_icon_width"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/nearby_places_list_item_icon"
+            android:src="@drawable/ic_gallery"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/txvNearbyPlaceRating"
+            app:layout_constraintEnd_toStartOf="@id/txvNearbyPlaceOpenNow"
+            app:layout_constraintStart_toEndOf="@id/imvNearbyPlaceIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Testing name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceRating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:textSize="@dimen/text_subtitle"
+            app:layout_constraintBottom_toTopOf="@id/txvNearbyPlaceDistance"
+            app:layout_constraintEnd_toStartOf="@id/txvNearbyPlaceOpenNow"
+            app:layout_constraintStart_toEndOf="@id/imvNearbyPlaceIcon"
+            app:layout_constraintTop_toBottomOf="@+id/txvNearbyPlaceName"
+            tools:text="Rating: 4,9 (255)" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceDistance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:textSize="@dimen/text_subtitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/txvNearbyPlaceOpenNow"
+            app:layout_constraintStart_toEndOf="@id/imvNearbyPlaceIcon"
+            app:layout_constraintTop_toBottomOf="@+id/txvNearbyPlaceRating"
+            tools:text="Distance: 4 Km" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txvNearbyPlaceOpenNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:textSize="@dimen/text_subtitle"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Open" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

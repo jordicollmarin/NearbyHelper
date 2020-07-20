@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <!-- The background color, preferably the same as your normal theme -->
+    <item android:drawable="@color/colorPrimary" />
+    <!-- The product logo with top margin and centered horizontally -->
+    <item
+        android:bottom="@dimen/nearby_place_detail_placeholder"
+        android:drawable="@drawable/ic_exclamation"
+        android:left="@dimen/nearby_place_detail_placeholder"
+        android:right="@dimen/nearby_place_detail_placeholder"
+        android:top="@dimen/nearby_place_detail_placeholder" />
+</layer-list>

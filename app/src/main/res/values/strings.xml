@@ -1,13 +1,41 @@
 <resources>
-    <string name="app_name">NearbyHelper</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Nearby Helper</string>
 
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <!-- Buttons -->
+    <string name="button_ok">OK</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_go_back">Retry</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Errors -->
+    <string name="error_location_permission_denied_message">Nearby Helper needs access to your location to work properly. Please set it manually before open the App again.</string>
+    <string name="error_location_unknown_message">There was an error and we could not get your current location. Please try it again.</string>
+    <string name="error_nearby_places_error_message">There was an error and we could not get nearby places. Please try it again.</string>
+    <string name="error_nearby_place_detail_error_message">There was an error and we could not get nearby place details. Please try it again.</string>
+
+    <!-- Nearby places list -->
+    <string name="nearby_places_list_fragment_label">Nearby places</string>
+    <string name="nearby_places_list_order_by">Order by</string>
+    <string name="nearby_places_list_filter_all">All</string>
+    <string name="nearby_places_list_filter_bars">Bars</string>
+    <string name="nearby_places_list_filter_cafes">Cafes</string>
+    <string name="nearby_places_list_filter_restaurants">Restaurants</string>
+    <string name="nearby_places_list_empty">There are not results. Please, change filters to search for more nearby places.</string>
+    <string name="nearby_places_list_item_icon">Place icon (Bar, Cafe or Restaurant)</string>
+    <string name="nearby_places_list_item_rating">Rating: %1$s</string>
+    <string name="nearby_places_list_item_distance">Distance: %1$s km</string>
+    <string name="nearby_places_list_item_distance_unknown">Unknown</string>
+    <string name="nearby_places_list_item_open">Open</string>
+    <string name="nearby_places_list_item_closed">Closed</string>
+    <string-array name="nearby_places_list_order_options">
+        <item>Rating</item>
+        <item>Name</item>
+        <item>Distance</item>
+        <item>Open/Closed</item>
+    </string-array>
+
+    <!-- Nearby place detail -->
+    <string name="nearby_place_detail_fragment_label">Nearby place detail</string>
+    <string name="nearby_place_detail_call">Call</string>
+    <string name="nearby_place_detail_price_level">%1$s (1 to 5)</string>
+    <string name="nearby_place_detail_phone_not_available">Phone unavailable</string>
 </resources>

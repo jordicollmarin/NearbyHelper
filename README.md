@@ -10,7 +10,6 @@
 * [Installation](#installation)
 * [Configuration](#configuration)
 * [Build](#build)
-* [Test](#test)
 * [Status](#status)
 * [Contact](#contact)
 
@@ -47,11 +46,6 @@ git clone git@github.com:jordicollmarin/NearbyHelper.git
 Build the project in Debug mode like this:
 
 `./gradlew buildDebug`
-
-## Test
-Call these tasks to run Local and Instrumented unit tests:
-
-`./gradlew test`
 
 ## Status
 Project is: _in progress_.
